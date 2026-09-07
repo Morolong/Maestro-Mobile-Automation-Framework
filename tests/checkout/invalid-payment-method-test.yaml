@@ -1,0 +1,61 @@
+appId: com.saucelabs.mydemoapp.android
+---
+- runFlow: ../../flows/authentication/navigate-to-login.yaml
+
+- runFlow:
+    file: ../../flows/authentication/login.yaml
+    env:
+      USERNAME: "bod@example.com"
+      PASSWORD: "10203040"
+
+- runFlow: ../../flows/products/navigate-to-product.yaml
+
+- runFlow: ../../flows/products/increase-product-count.yaml
+
+- runFlow: ../../flows/products/add-to-cart.yaml
+
+- runFlow: ../../flows/checkout/go-to-cart.yaml
+
+- runFlow: ../../flows/checkout/proceed-to-checkout.yaml
+
+- runFlow:
+    file: ../../flows/checkout/fill-valid-shipping-address.yaml
+    env:
+      FULL_NAME: "User One"
+      ADDRESS_LINE_1: "Complex Name"
+      ADDRESS_LINE_2: "Street Number and Name"
+      CITY: "Johannesburg"
+      STATE_REGION: "Gauteng"
+      ZIP_CODE: "7845"
+      COUNTRY: "South Africa"
+
+- runFlow: ../../flows/checkout/proceed-to-payment.yaml
+
+- extendedWaitUntil:
+    visible: "Enter a payment method"
+    timeout: 10000
+
+- assertVisible: "Enter a payment method"
+
+- runFlow: ../../flows/checkout/review-order.yaml
+
+- extendedWaitUntil:
+    visible: "Value looks invalid."
+    timeout: 10000
+- assertVisible:
+    id: "nameErrorIV"
+
+- assertVisible:
+    id: "cardNumberErrorIV"
+- assertVisible:
+    text: "Value looks invalid."
+    index: 1
+
+- assertVisible:
+    id: "securityCodeIV"
+- assertVisible:
+    text: "Value looks invalid."
+    index: 2
+
+- assertVisible: "Review Order"
+
