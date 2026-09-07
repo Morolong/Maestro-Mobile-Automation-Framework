@@ -1,0 +1,23 @@
+appId: com.saucelabs.mydemoapp.android
+---
+
+- tapOn: "Rebecca Winter"
+- inputText: ${FULL_NAME}
+
+- tapOn: "Mandorley 112"
+- inputText: ${ADDRESS_LINE_1}
+
+- tapOn: "Entrance 1"
+- inputText: ${ADDRESS_LINE_2}
+
+- tapOn: "Truro"
+- inputText: ${CITY}
+
+- tapOn: "Cornwall"
+- inputText: ${STATE_REGION}
+
+- tapOn: "89750"
+- inputText: ${ZIP_CODE}
+
+- tapOn: "United Kingdom"
+- inputText: ${COUNTRY}
