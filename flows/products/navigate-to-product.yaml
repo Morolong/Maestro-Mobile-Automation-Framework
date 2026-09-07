@@ -1,0 +1,4 @@
+appId: com.saucelabs.mydemoapp.android
+---
+
+- tapOn: "Product Image"
