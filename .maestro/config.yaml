@@ -1,3 +1,8 @@
 appId: com.saucelabs.mydemoapp.android
 flows:
-
+  - tests/authentication/successful-login.yaml
+  - tests/authentication/invalid-login.yaml
+  - tests/authentication/logout.yaml
+  - tests/products/product-journey.yaml
+  - tests/checkout/valid-checkout-journey.yaml
+  - tests/checkout/invalid-payment-method-test.yaml
