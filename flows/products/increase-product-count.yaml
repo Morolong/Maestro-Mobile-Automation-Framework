@@ -1,0 +1,5 @@
+appId: com.saucelabs.mydemoapp.android
+---
+
+- tapOn: "Increase item quantity"
+- tapOn: "Increase item quantity"
