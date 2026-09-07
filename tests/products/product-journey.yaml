@@ -1,0 +1,35 @@
+appId: com.saucelabs.mydemoapp.android
+---
+
+- runFlow: ../../flows/authentication/navigate-to-login.yaml
+
+- runFlow:
+    file: ../../flows/authentication/login.yaml
+    env:
+      USERNAME: "bod@example.com"
+      PASSWORD: "10203040"
+
+- assertVisible: "Products"
+- assertVisible: "Product Image"
+- assertVisible: "Displays number of items in your cart"
+
+- runFlow: ../../flows/products/navigate-to-product.yaml
+
+- assertVisible: "Displays selected product"
+- assertVisible: "$ 29.99"
+- assertVisible: "Displays available colors of selected product"
+
+- runFlow: ../../flows/products/increase-product-count.yaml
+
+- assertVisible: "3"
+
+- runFlow: ../../flows/products/add-to-cart.yaml
+
+- runFlow: ../../flows/checkout/go-to-cart.yaml
+
+- assertVisible: "My Cart"
+- assertVisible: "Displays selected product"
+- assertVisible: "$ 29.99"
+- assertVisible:
+    text: "3"
+    index: 1
