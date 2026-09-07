@@ -1,0 +1,18 @@
+appId: com.saucelabs.mydemoapp.android
+---
+- runFlow: ../../flows/authentication/navigate-to-login.yaml
+
+- runFlow:
+    file: ../../flows/authentication/login.yaml
+    env:
+      USERNAME: "incorrect user"
+      PASSWORD: "wrongPassword"
+
+
+- extendedWaitUntil:
+    visible:
+        text: "Login"
+        index: 1
+    timeout: 10000
+
+- assertVisible: "Login"
