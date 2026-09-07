@@ -1,0 +1,17 @@
+appId: com.saucelabs.mydemoapp.android
+---
+
+- tapOn: "Rebecca Winter"
+- inputText: ${FULL_NAME}
+
+- tapOn:
+    id: "cardNumberET"
+- inputText: ${CARD_NUMBER}
+
+- tapOn:
+    id: "expirationDateET"
+- inputText: ${EXPIRY_DATE}
+
+- tapOn:
+    id: "securityCodeET"
+- inputText: ${CVV}
