@@ -1,0 +1,6 @@
+appId: com.saucelabs.mydemoapp.android
+---
+
+- tapOn:
+    text: "Displays number of items in your cart"
+    index: 1

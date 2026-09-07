@@ -1,0 +1,5 @@
+appId: com.saucelabs.mydemoapp.android
+---
+- scrollUntilVisible:
+    element: "Proceed To Checkout"
+- tapOn: "Proceed To Checkout"

@@ -1,0 +1,80 @@
+appId: com.saucelabs.mydemoapp.android
+---
+
+- runFlow: ../../flows/authentication/navigate-to-login.yaml
+
+- runFlow:
+    file: ../../flows/authentication/login.yaml
+    env:
+      USERNAME: "bod@example.com"
+      PASSWORD: "10203040"
+
+- runFlow: ../../flows/products/navigate-to-product.yaml
+
+- runFlow: ../../flows/products/increase-product-count.yaml
+
+- runFlow: ../../flows/products/add-to-cart.yaml
+
+- runFlow: ../../flows/checkout/go-to-cart.yaml
+
+- runFlow: ../../flows/checkout/proceed-to-checkout.yaml
+
+- assertVisible: "Checkout"
+- assertVisible: "Enter a shipping address"
+- assertVisible: "Full Name*"
+- assertVisible: "Address Line 1*"
+- assertVisible: "City*"
+- assertVisible: "State/Region"
+- assertVisible: "Zip Code*"
+- assertVisible: "Country*"
+- assertVisible: "To Payment"
+
+- runFlow:
+    file: ../../flows/checkout/fill-valid-shipping-address.yaml
+    env:
+      FULL_NAME: "User One"
+      ADDRESS_LINE_1: "Complex Name"
+      ADDRESS_LINE_2: "Street Number and Name"
+      CITY: "Johannesburg"
+      STATE_REGION: "Gauteng"
+      ZIP_CODE: "7845"
+      COUNTRY: "South Africa"
+
+- runFlow: ../../flows/checkout/proceed-to-payment.yaml
+
+- extendedWaitUntil:
+    visible: "Enter a payment method"
+    timeout: 10000
+
+- assertVisible: "Enter a payment method"
+- assertVisible: "Full Name*"
+- assertVisible: "Card Number*"
+- assertVisible: "Expiration Date*"
+- assertVisible: "Security Code*"
+
+- runFlow: 
+    file: ../../flows/checkout/fill-valid-payment-details.yaml
+    env:
+      FULL_NAME: "User One"  
+      CARD_NUMBER: "4111111111111111"
+      EXPIRY_DATE: "12/28"
+      CVV: "123"
+
+- runFlow: ../../flows/checkout/review-order.yaml
+- assertVisible: "Review your order"
+- assertVisible: "Displays selected product"
+- assertVisible: "Deliver Address"
+- scrollUntilVisible:
+    element: "Payment Method"
+- assertVisible: "Total:"
+- scrollUntilVisible:
+    element: "DHL Standard Delivery"
+- assertVisible: "DHL Standard Delivery"
+
+- runFlow: ../../flows/checkout/place-order.yaml
+
+- assertVisible: "CHECKOUT COMPLETE"
+
+- runFlow: ../../flows/checkout/continue-shopping.yaml
+
+- assertVisible: "Products"
