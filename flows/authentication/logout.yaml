@@ -1,0 +1,15 @@
+appId: com.saucelabs.mydemoapp.android
+---
+
+- scrollUntilVisible:
+    element: "View menu"
+
+- tapOn: "View menu"
+
+- scrollUntilVisible:
+    element: "Log Out"
+
+- tapOn: "Log Out"
+
+- tapOn: "LOGOUT"
+
