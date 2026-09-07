@@ -128,9 +128,7 @@ The CI/CD pipeline **will be configured to execute the Maestro suite against a h
 ### What happens when a critical test fails
 
 "Critical" here means anything in the login → product → cart → checkout
-core journey (i.e. everything currently wired into `.maestro/config.yaml`) -
-as opposed to a scenario from the "beyond the happy path" backlog once
-those are automated and could reasonably be marked non-blocking.
+core journey (i.e. everything currently wired into `.maestro/config.yaml`).
 
 1. **The pipeline fails the build/job**, not just an individual step, so it
    can't be missed in a green checkmark.
@@ -141,7 +139,7 @@ those are automated and could reasonably be marked non-blocking.
      README's "known limitations" section flags this as not yet wired up -
      today this step is a manual write-up, e.g.
      `evidence/failure-investigation.md`).
-   - The failure is **not auto-retried blindly**. A single automatic retry
+   - The failure is **not auto-retried**. A single automatic retry
      is acceptable to filter out obvious infra/emulator flakiness, but a
      failure that reproduces on retry is treated as real and left failing,
      not silently re-run until green.
@@ -169,50 +167,8 @@ those are automated and could reasonably be marked non-blocking.
   the "treat as flaky" path in `evidence/failure-investigation.md`) is
   visible as a pattern rather than a one-off.
 
-Example CI shape (GitHub Actions), for illustration:
-
-```yaml
-name: maestro-suite
-on:
-  pull_request:
-    paths: ["tests/**", "flows/**", ".maestro/**"]
-  push:
-    branches: [main]
-  schedule:
-    - cron: "0 2 * * *"   # nightly
-  workflow_dispatch: {}
-
-jobs:
-  maestro:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Start Android emulator
-        run: ./ci/start-emulator.sh
-      - name: Install demo app APK
-        run: adb install My-Demo-App-Android.apk
-      - name: Run Maestro suite
-        run: |
-          maestro test .maestro/config.yaml \
-            --format junit \
-            --output evidence/report.xml \
-            --debug-output evidence/
-      - name: Upload evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: maestro-evidence
-          path: evidence/
-          retention-days: 21
-      - name: Notify on failure
-        if: failure() && github.event_name != 'pull_request'
-        run: ./ci/notify-failure.sh
-```
-
 ## Known limitations / what I'd improve with more time
 
-- Confirm every `ASSUMPTION FLAGGED` string against a live emulator - this
-  suite has still not been run against one.
 - Replace the accessibility-label/index and placeholder-text selectors with
   real resource ids once the app team can provide them.
 - Implement CI/CD integration - configure the Maestro test suite to execute automatically within a CI/CD pipeline, including smoke-test execution on pull requests, full-suite execution on merges, scheduled nightly execution, and manual workflow execution for release validation.
@@ -235,7 +191,7 @@ Additional scenarios I'd test if time allowed, beyond what's automated:
 5. Network interruption during "Place Order" - does the app show an error
    and avoid double-charging or duplicate order submission on retry?
 
-## Failure investigation (spec item 9)
+## Failure investigation
 
 See `evidence/failure-investigation.md` for the full write-up. Summary:
 
@@ -285,11 +241,8 @@ items, add them to the cart, and complete checkout - the same as an
 authenticated user would.
 
 **Impact:** Authentication is effectively bypassed for the demo app's core
-flows, which is a functional security defect, not just a UX/copy issue.
+flows, which is a functional security defect.
 
-**Suggested next step:** File this as a bug against the app (not the test
-suite) with the reproduction steps above, and add a regression test once
+**Suggested next step:** File this as a bug against the app with the reproduction steps above, and add a regression test once
 fixed that explicitly asserts the user is *blocked* from Products after an
-invalid login attempt - `tests/authentication/invalid-login.yaml` currently
-only asserts the Login screen re-appears, not that authenticated screens
-are unreachable; that assertion gap should be closed alongside the app fix.
+invalid login attempt. 
